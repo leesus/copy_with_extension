@@ -19,6 +19,8 @@ class CopyWithGenerator extends GeneratorForAnnotation<CopyWith> {
         _sortedConstructorFields(classElement);
     final bool generateCopyWithNull =
         annotation.read("generateCopyWithNull").boolValue;
+    final bool generateCopyWithOptional =
+        annotation.read("generateCopyWithOptional").boolValue;
 
     final String typeParametersAnnotation =
         _typeParametersAnnotation(classElement);
@@ -29,6 +31,7 @@ class CopyWithGenerator extends GeneratorForAnnotation<CopyWith> {
     extension ${classElement.name}CopyWithExtension$typeParametersAnnotation on ${classElement.name}$typeParametersNames {
       ${_copyWithPart(typeAnnotation, sortedFields)}
       ${generateCopyWithNull ? _copyWithNullPart(typeAnnotation, sortedFields) : ""}
+      ${generateCopyWithOptional ? _copyWithOptionalPart(typeAnnotation, sortedFields) : ""}
     }
     ''';
   }
@@ -95,6 +98,27 @@ class CopyWithGenerator extends GeneratorForAnnotation<CopyWith> {
     return '''
       $typeAnnotation copyWithNull({$nullConstructorInput}) {
         return $typeAnnotation($nullParamsInput);
+      }
+    ''';
+  }
+
+  String _copyWithOptionalPart(
+    String typeAnnotation,
+    List<_FieldInfo> sortedFields,
+  ) {
+    final optionalConstructorInput = sortedFields.fold(
+      "",
+      (r, v) => "$r Optional<${v.type}> ${v.name},",
+    );
+    final optionalParamsInput = sortedFields.fold(
+      "",
+      (r, v) =>
+          "$r ${v.name}: ${v.name} == null ? this.${v.name} : ${v.name}.value,",
+    );
+
+    return '''
+      $typeAnnotation copyWithOptional({$optionalConstructorInput}) {
+        return $typeAnnotation($optionalParamsInput);
       }
     ''';
   }

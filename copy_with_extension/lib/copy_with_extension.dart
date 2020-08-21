@@ -6,8 +6,13 @@ library copy_with_extension;
 class CopyWith {
   /// Creates a new [CopyWith] instance.
   /// Set `generateCopyWithNull` to `true` for generating an extra `copyWithNull` function that allows you to nullify the properties.
-  const CopyWith({this.generateCopyWithNull = false})
-      : assert(generateCopyWithNull is bool);
+  /// Set `generateCopyWithOptional` to `true` for generating an extra `copyWithOptional` function that allows you to pass quiver Optionals.
+  const CopyWith({
+    this.generateCopyWithNull = false,
+    this.generateCopyWithOptional = false,
+  })  : assert(generateCopyWithNull is bool),
+        assert(generateCopyWithOptional is bool);
 
   final bool generateCopyWithNull;
+  final bool generateCopyWithOptional;
 }
