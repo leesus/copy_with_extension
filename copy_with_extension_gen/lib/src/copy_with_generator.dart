@@ -113,7 +113,7 @@ class CopyWithGenerator extends GeneratorForAnnotation<CopyWith> {
     final optionalParamsInput = sortedFields.fold(
       "",
       (r, v) =>
-          "$r ${v.name}: ${v.name} == null ? this.${v.name} : ${v.name}.value,",
+          "$r ${v.name}: ${v.name} == null ? this.${v.name} : ${v.name}.orNull,",
     );
 
     return '''
